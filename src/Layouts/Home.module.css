@@ -1,0 +1,14 @@
+.newButton{
+    border: none;
+    color: white;
+    padding: 10px;
+    background-color: #2072f5;
+    border-radius: 20px;
+    margin-left: 100%;
+}
+.alignedMid{
+    border: none;
+    margin: auto;
+    width: 50%;
+    padding: 10px;
+}
