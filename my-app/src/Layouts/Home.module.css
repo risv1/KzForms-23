@@ -1,0 +1,12 @@
+.newButtonWrapper {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 10px;
+    margin-right: 3rem;
+}
+.wrapper_div{
+    margin-top: 1rem;
+    background-color: white;
+    margin-left: 3rem;
+    margin-right: 3rem;
+}
