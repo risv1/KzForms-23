@@ -27,7 +27,6 @@ const Edit: FC<EditProps> = ({ id }) => {
             'Content-Type': 'application/json'
         }
     });
-    // console.log('visu in edit');
     goToPage('/contacts/list');
 }
     
