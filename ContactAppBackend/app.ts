@@ -1,12 +1,22 @@
+import { Request, Response } from "express";
+
+type ContactType = {
+  id: string;
+  regno: string;
+  lastName: string;
+  firstName: string;
+  age: number;
+  email: string;
+  github: string;
+}
+
 const express = require('express');
 const app = express();
 const bodyParser = require('body-parser');
 
 const fs = require('node:fs/promises');
 app.use(bodyParser.json());
-app.use((req, res, next) => {
-  // Attach CORS headers
-  // Required when using a detached backend (that runs on a different domain)
+app.use((req: Request, res: Response, next: any) => {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET,POST,PUT, DELETE');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
@@ -18,24 +28,22 @@ async function getContactData() {
   return data;
 }
 
-function storeContactData(data) {
+function storeContactData(data: Object) {
    return fs.writeFile('./data/data.json', JSON.stringify( data || [] ));
 }
 
-// exports.getStoredPosts = getStoredPosts;
-// exports.storePosts = storePosts;
-app.get('/api/contacts', async (req, res) => {
+app.get('/api/contacts', async (req: Request, res: Response) => {
     const contactData = await getContactData();
     res.json({ contactData });
   });
 
-app.get('/api/contacts/:id', async(req,res)=>{
+app.get('/api/contacts/:id', async(req: Request ,res: Response)=>{
   const contactData = await getContactData();
-  const reqData = contactData.find((data) => data.id == req.params.id);
+  const reqData = contactData.find((data: ContactType) => data.id == req.params.id);
   res.json({reqData});
 })
 
-app.post('/api/contacts', async (req,res)=>{
+app.post('/api/contacts', async (req: Request, res: Response)=>{
   const currentContactData = await getContactData();
   const sendContactData = req.body
   sendContactData.id = Math.random();
@@ -45,10 +53,10 @@ app.post('/api/contacts', async (req,res)=>{
   res.status(201).json({ message: 'Stored new contact', data: sendContactData});
 })
 
-app.put('/api/contacts/:id', async(req,res)=>{
+app.put('/api/contacts/:id', async(req: Request, res: Response)=>{
   const contactData = await getContactData();
   const sendContactData = req.body
-  // const reqData = contactData.find((data) => data.id == req.params.id);
+
   let flag = false;
   for(let i=0; i<contactData.length; i++){
     if(contactData[i].id == req.params.id){
@@ -64,9 +72,9 @@ app.put('/api/contacts/:id', async(req,res)=>{
   }
 })
 
-app.delete('/api/contacts/:id', async (req, res) => {
+app.delete('/api/contacts/:id', async (req: Request, res: Response) => {
   let contactData = await getContactData();
-  const updatedContactData = contactData.filter(data => data.id != req.params.id);
+  const updatedContactData = contactData.filter((data: ContactType) => data.id != req.params.id);
   await storeContactData(updatedContactData);
   res.status(200);
 });
@@ -75,15 +83,3 @@ app.listen(8080,
     ()=>{
         console.log('listening on port 8080');
     })
-
-    // [
-    //   { "id": 1, "lastName": "Snow", "firstName": "Jon", "age": 35 },
-    //   { "id": 2, "lastName": "Lannister", "firstName": "Cersei", "age": 42 },
-    //   { "id": 3, "lastName": "Lannister", "firstName": "Jaime", "age": 45 },
-    //   { "id": 4, "lastName": "Stark", "firstName": "Arya", "age": 16 },
-    //   { "id": 5, "lastName": "Targaryen", "firstName": "Daenerys", "age": 30 },
-    //   { "id": 6, "lastName": "Melisandre", "firstName": "Hello", "age": 150 },
-    //   { "id": 7, "lastName": "Clifford", "firstName": "Ferrara", "age": 44 },
-    //   { "id": 8, "lastName": "Frances", "firstName": "Rossini", "age": 36 },
-    //   { "id": 9, "lastName": "Roxie", "firstName": "Harvey", "age": 65 }
-    // ]
